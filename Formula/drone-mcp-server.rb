@@ -5,21 +5,21 @@
 class DroneMcpServer < Formula
   desc "MCP server for read-only Drone CI/CD inspection"
   homepage "https://github.com/sqsp/drone-mcp-server"
-  version "0.5.0"
+  version "0.6.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.5.0/drone-mcp-server-0.5.0-darwin-amd64.tar.gz"
-      sha256 "289f50817fddbba8228407422d5b4befc7c9bf7ebe7e40610655ffa484935af2"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.6.0/drone-mcp-server-0.6.0-darwin-amd64.tar.gz"
+      sha256 "970e4cb7d3bae163d04e259d3093111c34cbeea9e0d17bfa92467271feb3004c"
 
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.5.0/drone-mcp-server-0.5.0-darwin-arm64.tar.gz"
-      sha256 "5dea6229673310c39ceb7f19565efb3fe2b30f5fa7a6dac65965b7fc3665d75a"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.6.0/drone-mcp-server-0.6.0-darwin-arm64.tar.gz"
+      sha256 "2f7a22db2be0adc85def24427e078dda2ae660c45e073530f50a043f1f5c1734"
 
       def install
         bin.install "drone-mcp-server"
@@ -29,15 +29,15 @@ class DroneMcpServer < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.5.0/drone-mcp-server-0.5.0-linux-amd64.tar.gz"
-      sha256 "6cced9df1aa076f84c8daa91bd43746aaca4f06a54ca428c0b7af8dfe2852e48"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.6.0/drone-mcp-server-0.6.0-linux-amd64.tar.gz"
+      sha256 "d60720abe4c2c09912e21316374e8a9fe95b972a05d8ddab5ef44f166d1d038c"
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.5.0/drone-mcp-server-0.5.0-linux-arm64.tar.gz"
-      sha256 "5a96410e1f970572d3d5e91e512d18169b05638d0f864270a53080e076988a55"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.6.0/drone-mcp-server-0.6.0-linux-arm64.tar.gz"
+      sha256 "2da893677a4093e1e61167bec76194297095b2401d3b44aa4bceef2048d9721e"
       def install
         bin.install "drone-mcp-server"
       end

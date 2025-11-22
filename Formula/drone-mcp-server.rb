@@ -43,10 +43,23 @@ class GitHubPrivateRepositoryReleaseDownloadStrategy < CurlDownloadStrategy
       unless $?.success?
         raise CurlDownloadStrategyError, "Failed to fetch release #{@tag}: #{$?}"
       end
+      
       release = JSON.parse(release_json)
+      
+      # Check if we got an error response
+      if release["message"]
+        raise CurlDownloadStrategyError, "GitHub API error: #{release["message"]}"
+      end
+      
+      # Check if assets exist
+      unless release["assets"]
+        raise CurlDownloadStrategyError, "No assets found in release #{@tag}. Response: #{release_json[0..500]}"
+      end
+      
       asset = release["assets"].find { |a| a["name"] == @filename }
       unless asset
-        raise CurlDownloadStrategyError, "Asset #{@filename} not found in release #{@tag}"
+        available = release["assets"].map { |a| a["name"] }.join(", ")
+        raise CurlDownloadStrategyError, "Asset #{@filename} not found in release #{@tag}. Available: #{available}"
       end
       asset["id"]
     end

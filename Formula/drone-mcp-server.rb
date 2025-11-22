@@ -4,6 +4,7 @@
 require "download_strategy"
 require "utils/formatter"
 require "utils/github"
+require "json"
 
 # Custom download strategy for private GitHub releases
 class GitHubPrivateRepositoryReleaseDownloadStrategy < CurlDownloadStrategy

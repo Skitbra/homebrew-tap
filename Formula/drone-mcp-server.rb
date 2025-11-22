@@ -5,21 +5,21 @@
 class DroneMcpServer < Formula
   desc "MCP server for read-only Drone CI/CD inspection"
   homepage "https://github.com/sqsp/drone-mcp-server"
-  version "0.7.0"
+  version "0.7.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.0/drone-mcp-server-0.7.0-darwin-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "458cfec694aec95f55bd0e886dae1d37bcb86193f0a76c78c0b9eb4e4a2bceab"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.1/drone-mcp-server-0.7.1-darwin-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "c01ae014c324c47052712d5c4970395a80d07f56fdde10777e9b4a242e410d0e"
 
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.0/drone-mcp-server-0.7.0-darwin-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "49cd0120b7ade55f5da620f0ba2de9036a0b93a71fdd776334a768f0e47e9c78"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.1/drone-mcp-server-0.7.1-darwin-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "1be950cadbfc8a9540ae36130da86671e791da9332873830bb8091c5d09b3cc2"
 
       def install
         bin.install "drone-mcp-server"
@@ -29,18 +29,74 @@ class DroneMcpServer < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.0/drone-mcp-server-0.7.0-linux-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "6c3cc0436193b6ad25004dbc11256a4f43e06ff9c72d34618f7ea862063788f5"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.1/drone-mcp-server-0.7.1-linux-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "1ba2f95bcce4e8b0c5045f0e659bcae8c976107d6fb2e8d78116b8f9094cdbfb"
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.0/drone-mcp-server-0.7.0-linux-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "e0d627b33208bfff8c31beac0fcbb8e35ddfc98e908361b5c73e7a75e9ea29a0"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.7.1/drone-mcp-server-0.7.1-linux-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "0f259b23cd839d65d2309a1598d6e045cad2b6d1a727b50d309cdccf517880fd"
       def install
         bin.install "drone-mcp-server"
       end
+    end
+  end
+
+  require "formula"
+  require "json"
+
+  class GitHubPrivateRepositoryReleaseDownloadStrategy < CurlDownloadStrategy
+    require "utils/formatter"
+    require "utils/github"
+
+    def initialize(url, name, version, **meta)
+      super
+      set_github_token
+      parse_url_pattern
+    end
+
+    def set_github_token
+      @github_token = ENV["HOMEBREW_GITHUB_API_TOKEN"]
+      unless @github_token
+        raise CurlDownloadStrategyError, "HOMEBREW_GITHUB_API_TOKEN is required for private repository releases"
+      end
+    end
+
+    def parse_url_pattern
+      url_pattern = %r{https://github\.com/([^/]+)/([^/]+)/releases/download/([^/]+)/(.+)}
+      unless @url =~ url_pattern
+        raise CurlDownloadStrategyError, "Invalid GitHub release URL pattern: #{@url}"
+      end
+      @owner = Regexp.last_match(1)
+      @repo = Regexp.last_match(2)
+      @tag = Regexp.last_match(3)
+      @filename = Regexp.last_match(4)
+    end
+
+    def download_url
+      "https://api.github.com/repos/#{@owner}/#{@repo}/releases/assets/#{asset_id}"
+    end
+
+    def asset_id
+      @asset_id ||= begin
+        release_url = "https://api.github.com/repos/#{@owner}/#{@repo}/releases/tags/#{@tag}"
+        release_json = `curl -s -H "Authorization: token #{@github_token}" "#{release_url}"`
+        unless $?.success?
+          raise CurlDownloadStrategyError, "Failed to fetch release #{@tag}: #{$?}"
+        end
+        release = JSON.parse(release_json)
+        asset = release["assets"].find { |a| a["name"] == @filename }
+        unless asset
+          raise CurlDownloadStrategyError, "Asset #{@filename} not found in release #{@tag}"
+        end
+        asset["id"]
+      end
+    end
+
+    def _fetch(url: nil, resolved_url: nil, timeout: nil)
+      curl_download download_url, "--header", "Authorization: token #{@github_token}", "--header", "Accept: application/octet-stream", to: temporary_path
     end
   end
 

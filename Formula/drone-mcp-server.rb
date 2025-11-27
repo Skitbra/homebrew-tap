@@ -6,20 +6,20 @@ require_relative "../lib/private_strategy"
 class DroneMcpServer < Formula
   desc ""
   homepage "https://github.com/sqsp/drone-mcp-server"
-  version "0.0.16"
+  version "0.0.17"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.16/drone-mcp-server-0.0.16-darwin-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "76d5069e4c4228e766683bf257da1b2c3c4c7886318e200e8719c133d7b7f2e6"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.17/drone-mcp-server-0.0.17-darwin-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "41c13ac20719f2bf3030e6d98ef96ed94d5c632e704b88906727ad5bcee442c6"
 
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.16/drone-mcp-server-0.0.16-darwin-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "f0d0d45bf4b744e3e74e84862ba6179250ff97d5c7572c2e329640ad856407e3"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.17/drone-mcp-server-0.0.17-darwin-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "4f23784a3467f841cb86640280bbd19bd0ce0edec3ce45df0ab66e92d84f6a1a"
 
       def install
         bin.install "drone-mcp-server"
@@ -29,15 +29,15 @@ class DroneMcpServer < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.16/drone-mcp-server-0.0.16-linux-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "59dc0537835110e96af31fc2134f97747f4f1720766551126515524583c4d40d"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.17/drone-mcp-server-0.0.17-linux-amd64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "6c32d3bb01ed2f1185d3a3a8ea18bae163c514eac58eeb81eb0ab273cc597f01"
       def install
         bin.install "drone-mcp-server"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.16/drone-mcp-server-0.0.16-linux-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
-      sha256 "8b7651b5ca7b09ffff5564fbd51e9ee2567e3fdcb6b4c9c1ff68bc4070560753"
+      url "https://github.com/sqsp/drone-mcp-server/releases/download/v0.0.17/drone-mcp-server-0.0.17-linux-arm64.tar.gz", using: GitHubPrivateRepositoryReleaseDownloadStrategy
+      sha256 "7e700584c241aea1da16ee45a6721035b22b00b097423f81a8be4e9767ce9528"
       def install
         bin.install "drone-mcp-server"
       end
@@ -48,16 +48,16 @@ class DroneMcpServer < Formula
     <<~EOS
       *********************************************************************************
 
-            IMPORTANT: You must be connected to the VPN for the MCP server to work.
+      IMPORTANT: You must be connected to the VPN for the MCP server to work.
 
-            1. Drone credentials:
-               export DRONE_SERVER=https://delivery.squarespace.net
-               export DRONE_TOKEN=<your_drone_token>
+        1. Drone credentials:
+           export DRONE_SERVER=https://delivery.squarespace.net
+           export DRONE_TOKEN=<your_drone_token>
 
-            2. For IDE integration, see:
-               https://github.com/sqsp/drone-mcp-server/blob/master/README.md#ide-integration
+        2. For IDE integration, see:
+           https://github.com/sqsp/drone-mcp-server/blob/master/README.md#ide-integration
 
-            *********************************************************************************
+      *********************************************************************************
     EOS
   end
 end
